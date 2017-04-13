@@ -16,6 +16,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 public class PlayerService extends Service implements Player.Callback {
 
@@ -47,13 +48,15 @@ public class PlayerService extends Service implements Player.Callback {
         if (!TextUtils.isEmpty(url)) {
             mPlayerProvider.stop(false);
             mPlayerProvider.play(url);
+            Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
         }
         return START_STICKY;
     }
 
     @Override
     public void onCompletion() {
-
+        mPlayerProvider.stop(true);
+        Toast.makeText(this, "stop playing", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -63,6 +66,6 @@ public class PlayerService extends Service implements Player.Callback {
 
     @Override
     public void onError(String error) {
-
+        mPlayerProvider.stop(true);
     }
 }

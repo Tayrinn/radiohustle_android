@@ -13,7 +13,7 @@
     package="ru.tayrinn.hustle.radiohustle">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,6 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".player.PlayerService"
+            android:enabled="true"/>
     </application>
 
 </manifest>

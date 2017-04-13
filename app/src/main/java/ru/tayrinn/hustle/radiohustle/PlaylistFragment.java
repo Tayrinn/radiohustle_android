@@ -10,24 +10,30 @@
 
 package ru.tayrinn.hustle.radiohustle;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import ru.tayrinn.hustle.radiohustle.model.Track;
 import ru.tayrinn.hustle.radiohustle.player.PlayerService;
 
 public class PlaylistFragment extends Fragment {
+
+    private TrackAdapter mTrackAdapter;
 
     @Nullable
     @Override
@@ -38,8 +44,20 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView recyclerView = (RecyclerView) view;
-
+        final TracksApi tracksApi = new TracksApi();
+        final RecyclerView recyclerView = (RecyclerView) view;
+        mTrackAdapter = new TrackAdapter(new ArrayList<Track>());
+        recyclerView.setAdapter(mTrackAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        tracksApi.downloadTracks()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(tracks -> {
+                        mTrackAdapter.mTracks.clear();
+                        mTrackAdapter.mTracks.addAll(tracks);
+                        mTrackAdapter.notifyDataSetChanged();
+                })
+        .subscribe();
     }
 
     class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
@@ -54,15 +72,12 @@ public class PlaylistFragment extends Fragment {
         public TrackHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             final LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final TrackHolder holder = new TrackHolder(inflater.inflate(R.layout.track_item, parent, false));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = holder.getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        Intent intent = new Intent(getActivity(), PlayerService.class);
-                        intent.putExtra(PlayerService.TAG_URL, Urls.TRACKS_BASE_URL + mTracks.get(position).url);
-                        getActivity().startService(intent);
-                    }
+            holder.itemView.setOnClickListener(view -> {
+                int position = holder.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Intent intent = new Intent(getActivity(), PlayerService.class);
+                    intent.putExtra(PlayerService.TAG_URL, Urls.TRACKS_BASE_URL + mTracks.get(position).name);
+                    getActivity().startService(intent);
                 }
             });
             return holder;
@@ -91,7 +106,7 @@ public class PlaylistFragment extends Fragment {
         }
 
         void bind(@NonNull Track track) {
-            mName.setText(track.url);
+            mName.setText(track.name);
             mBpm.setText(track.bpm + " bmp");
         }
     }

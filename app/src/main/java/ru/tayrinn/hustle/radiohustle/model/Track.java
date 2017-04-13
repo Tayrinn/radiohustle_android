@@ -15,8 +15,8 @@ import com.google.gson.annotations.SerializedName;
 public class Track {
 
     @SerializedName("name")
-    public String url;
+    public String name;
 
     @SerializedName("bpm")
-    public Integer bpm;
+    public int bpm;
 }

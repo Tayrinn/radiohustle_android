@@ -12,11 +12,12 @@ package ru.tayrinn.hustle.radiohustle;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import ru.tayrinn.hustle.radiohustle.model.Track;
 
 public interface RadioSourceService {
 
     @GET(Urls.RADIO_HUSTLE)
-    List<Track> getTracks();
+    Observable<List<Track>> getTracks();
 }
