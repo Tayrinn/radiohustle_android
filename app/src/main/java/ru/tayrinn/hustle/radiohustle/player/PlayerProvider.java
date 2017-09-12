@@ -15,7 +15,6 @@ import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -65,6 +64,7 @@ public class PlayerProvider implements Player, MediaPlayer.OnPreparedListener, M
     public void play(String url) {
         createMediaPlayerIfNeeded();
         try {
+            mCallback.onPrepare();
             mMediaPlayer.setDataSource(url);
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
@@ -119,6 +119,7 @@ public class PlayerProvider implements Player, MediaPlayer.OnPreparedListener, M
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mMediaPlayer.start();
+        mCallback.onStartPlaying();
     }
 
     @Override

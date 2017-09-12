@@ -11,11 +11,11 @@
 package ru.tayrinn.hustle.radiohustle;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,13 +23,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import ru.tayrinn.hustle.radiohustle.eventbus.PlayerEvent;
+import ru.tayrinn.hustle.radiohustle.model.PlayerState;
 import ru.tayrinn.hustle.radiohustle.model.Track;
-import ru.tayrinn.hustle.radiohustle.player.PlayerService;
 
 public class PlaylistFragment extends Fragment {
 
@@ -46,8 +49,9 @@ public class PlaylistFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final TracksApi tracksApi = new TracksApi();
         final RecyclerView recyclerView = (RecyclerView) view;
-        mTrackAdapter = new TrackAdapter(new ArrayList<Track>());
+        mTrackAdapter = new TrackAdapter(new ArrayList<>());
         recyclerView.setAdapter(mTrackAdapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         tracksApi.downloadTracks()
                 .subscribeOn(Schedulers.io())
@@ -60,11 +64,11 @@ public class PlaylistFragment extends Fragment {
         .subscribe();
     }
 
-    class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
+    private class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
 
         List<Track> mTracks;
 
-        public TrackAdapter(@NonNull List<Track> mTracks) {
+        TrackAdapter(@NonNull List<Track> mTracks) {
             this.mTracks = mTracks;
         }
 
@@ -75,9 +79,7 @@ public class PlaylistFragment extends Fragment {
             holder.itemView.setOnClickListener(view -> {
                 int position = holder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    Intent intent = new Intent(getActivity(), PlayerService.class);
-                    intent.putExtra(PlayerService.TAG_URL, Urls.TRACKS_BASE_URL + mTracks.get(position).name);
-                    getActivity().startService(intent);
+                    EventBus.getDefault().post(new PlayerEvent(mTracks.get(position), PlayerState.State.PLAY));
                 }
             });
             return holder;

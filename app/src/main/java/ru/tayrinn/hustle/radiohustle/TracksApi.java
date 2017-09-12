@@ -75,7 +75,7 @@ public class TracksApi {
             "\t{\"name\":\"audio/Beyonce_-_Halo.mp3\",\"bpm\":\"080\"}]";
 
     public TracksApi() {
-        this(Urls.TRACKS_BASE_URL);
+        this(Urls.BASE_URL);
     }
 
     private TracksApi(@NonNull String baseUrl) {
@@ -91,8 +91,8 @@ public class TracksApi {
     }
 
     public Observable<List<Track>> downloadTracks() {
-//        return mRadioSourceService.getTracks();
-        Type listType = new TypeToken<List<Track>>() {}.getType();
-        return Observable.just(gson.fromJson(TRACKS_JSON, listType));
+        return mRadioSourceService.getTracks();
+//        Type listType = new TypeToken<List<Track>>() {}.getType();
+//        return Observable.just(gson.fromJson(TRACKS_JSON, listType));
     }
 }

@@ -10,8 +10,11 @@
 
 package ru.tayrinn.hustle.radiohustle;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import ru.tayrinn.hustle.radiohustle.player.PlayerService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = new Intent(this, PlayerService.class);
+        startService(intent);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()

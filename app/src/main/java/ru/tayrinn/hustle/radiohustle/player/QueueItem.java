@@ -10,5 +10,9 @@
 
 package ru.tayrinn.hustle.radiohustle.player;
 
+import ru.tayrinn.hustle.radiohustle.model.Track;
+
 public class QueueItem {
+
+    Track track;
 }

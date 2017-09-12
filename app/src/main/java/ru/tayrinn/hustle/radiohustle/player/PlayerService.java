@@ -18,6 +18,14 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import ru.tayrinn.hustle.radiohustle.Utils;
+import ru.tayrinn.hustle.radiohustle.eventbus.PlayerEvent;
+import ru.tayrinn.hustle.radiohustle.model.PlayerState;
+
 public class PlayerService extends Service implements Player.Callback {
 
     public static final String TAG_URL = "track_url";
@@ -28,12 +36,7 @@ public class PlayerService extends Service implements Player.Callback {
     public void onCreate() {
         super.onCreate();
         mPlayerProvider = new PlayerProvider(this);
-    }
-
-    public class AudioPlayerBinder extends Binder {
-        public PlayerService getService() {
-            return PlayerService.this;
-        }
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -48,7 +51,7 @@ public class PlayerService extends Service implements Player.Callback {
         if (!TextUtils.isEmpty(url)) {
             mPlayerProvider.stop(false);
             mPlayerProvider.play(url);
-            Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
         }
         return START_STICKY;
     }
@@ -61,11 +64,42 @@ public class PlayerService extends Service implements Player.Callback {
 
     @Override
     public void onPlaybackStatusChanged(int state) {
-
     }
 
     @Override
     public void onError(String error) {
         mPlayerProvider.stop(true);
+        Toast.makeText(this, "error, stop playing", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStartPlaying() {
+
+    }
+
+    @Override
+    public void onPrepare() {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PlayerEvent event) {
+        if (event.player.state == PlayerState.State.PLAY) {
+            mPlayerProvider.stop(false);
+            mPlayerProvider.play(Utils.getUrl(event.player.track));
+            Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public class AudioPlayerBinder extends Binder {
+        public PlayerService getService() {
+            return PlayerService.this;
+        }
     }
 }

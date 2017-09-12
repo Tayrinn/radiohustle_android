@@ -1,5 +1,5 @@
 /*
- * TrackSourceService.java
+ * Utils.java
  *
  * This file is a part of the Yandex Search for Android project.
  *
@@ -10,14 +10,11 @@
 
 package ru.tayrinn.hustle.radiohustle;
 
-import java.util.List;
-
-import io.reactivex.Observable;
-import retrofit2.http.GET;
 import ru.tayrinn.hustle.radiohustle.model.Track;
 
-public interface RadioSourceService {
+public class Utils {
 
-    @GET("getTrackList/")
-    Observable<List<Track>> getTracks();
+    public static String getUrl(Track track) {
+        return Urls.TRACKS_BASE_URL + track.name;
+    }
 }

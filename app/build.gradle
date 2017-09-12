@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "ru.tayrinn.hustle.radiohustle"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -31,6 +31,7 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:${project.property('supportlibrary')}"
     compile "com.android.support:recyclerview-v7:${project.property('supportlibrary')}"
+    compile "com.android.support:support-dynamic-animation:${project.property('supportlibrary')}"
 
     //RxAndroid
     compile "io.reactivex.rxjava2:rxandroid:${project.property('rx')}"
@@ -40,6 +41,8 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:${project.property('retrofit')}"
     compile "com.squareup.retrofit2:adapter-rxjava2:${project.property('retrofit')}"
     compile "com.squareup.retrofit2:converter-gson:${project.property('retrofit')}"
+
+    compile "org.greenrobot:eventbus:${project.property('eventbus')}"
 
     testCompile 'junit:junit:4.12'
 }

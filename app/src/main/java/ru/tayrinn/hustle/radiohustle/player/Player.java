@@ -81,6 +81,10 @@ public interface Player {
          * @param error to be added to the PlaybackState
          */
         void onError(String error);
+
+        void onStartPlaying();
+
+        void onPrepare();
     }
 
     /**

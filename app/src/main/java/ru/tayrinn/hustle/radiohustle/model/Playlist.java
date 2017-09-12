@@ -1,5 +1,5 @@
 /*
- * Track.java
+ * Playlist.java
  *
  * This file is a part of the Yandex Search for Android project.
  *
@@ -10,13 +10,12 @@
 
 package ru.tayrinn.hustle.radiohustle.model;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
-public class Track {
+public interface Playlist {
 
-    @SerializedName("name")
-    public String name;
+    Track next();
+    Track prev();
+    Track seekTo(int position);
 
-    @SerializedName("bpm")
-    public String bpm;
 }
