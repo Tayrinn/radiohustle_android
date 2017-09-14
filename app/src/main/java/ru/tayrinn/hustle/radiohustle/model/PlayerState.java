@@ -13,9 +13,9 @@ package ru.tayrinn.hustle.radiohustle.model;
 public class PlayerState {
 
     public State state;
-    public Track track;
+    public MediaInfo track;
 
-    public PlayerState(Track track, State state) {
+    public PlayerState(MediaInfo track, State state) {
         this.track = track;
         this.state = state;
     }

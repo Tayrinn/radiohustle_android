@@ -47,12 +47,12 @@ public class PlayerService extends Service implements Player.Callback {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String url = intent.getStringExtra(TAG_URL);
-        if (!TextUtils.isEmpty(url)) {
-            mPlayerProvider.stop(false);
-            mPlayerProvider.play(url);
+//        String url = intent.getStringExtra(TAG_URL);
+//        if (!TextUtils.isEmpty(url)) {
+//            mPlayerProvider.stop(false);
+//            mPlayerProvider.play(url);
 //            Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
-        }
+//        }
         return START_STICKY;
     }
 
@@ -86,7 +86,7 @@ public class PlayerService extends Service implements Player.Callback {
     public void onMessageEvent(PlayerEvent event) {
         if (event.player.state == PlayerState.State.PLAY) {
             mPlayerProvider.stop(false);
-            mPlayerProvider.play(Utils.getUrl(event.player.track));
+            mPlayerProvider.play(event.player.track.getUrl());
             Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
         }
     }

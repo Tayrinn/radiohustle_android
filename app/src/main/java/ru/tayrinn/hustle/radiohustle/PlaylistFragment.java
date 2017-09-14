@@ -31,6 +31,8 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import ru.tayrinn.hustle.radiohustle.eventbus.PlayerEvent;
+import ru.tayrinn.hustle.radiohustle.model.MediaInfo;
+import ru.tayrinn.hustle.radiohustle.model.MediaInfoImpl;
 import ru.tayrinn.hustle.radiohustle.model.PlayerState;
 import ru.tayrinn.hustle.radiohustle.model.Track;
 
@@ -56,6 +58,16 @@ public class PlaylistFragment extends Fragment {
         tracksApi.downloadTracks()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .map(tracks -> {
+                    List<MediaInfo> mediaInfos = new ArrayList<>();
+                    for (Track track : tracks) {
+                        MediaInfo info = new MediaInfoImpl(track);
+                        if (info.getBpm() > 0) {
+                            mediaInfos.add(info);
+                        }
+                    }
+                    return mediaInfos;
+                })
                 .doOnNext(tracks -> {
                         mTrackAdapter.mTracks.clear();
                         mTrackAdapter.mTracks.addAll(tracks);
@@ -66,9 +78,9 @@ public class PlaylistFragment extends Fragment {
 
     private class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
 
-        List<Track> mTracks;
+        List<MediaInfo> mTracks;
 
-        TrackAdapter(@NonNull List<Track> mTracks) {
+        TrackAdapter(@NonNull List<MediaInfo> mTracks) {
             this.mTracks = mTracks;
         }
 
@@ -107,9 +119,9 @@ public class PlaylistFragment extends Fragment {
             mBpm = (TextView) itemView.findViewById(R.id.track_bpm);
         }
 
-        void bind(@NonNull Track track) {
-            mName.setText(track.name);
-            mBpm.setText(track.bpm + " bmp");
+        void bind(@NonNull MediaInfo track) {
+            mName.setText(track.getArtistName() + " - " + track.getTrackName());
+            mBpm.setText(track.getBpm() + " bmp");
         }
     }
 }

@@ -10,9 +10,11 @@
 
 package ru.tayrinn.hustle.radiohustle.model;
 
-public class MediaInfo {
+public interface MediaInfo {
 
-    String name;
-    String author;
-    String bpm;
+    String getArtistName();
+    String getTrackName();
+    int getBpm();
+    String getUrl();
+
 }
