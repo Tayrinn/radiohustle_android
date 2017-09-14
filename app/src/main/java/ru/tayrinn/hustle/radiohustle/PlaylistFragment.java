@@ -115,8 +115,8 @@ public class PlaylistFragment extends Fragment {
 
         TrackHolder(@NonNull View itemView) {
             super(itemView);
-            mName = (TextView) itemView.findViewById(R.id.track_name);
-            mBpm = (TextView) itemView.findViewById(R.id.track_bpm);
+            mName = itemView.findViewById(R.id.track_name);
+            mBpm = itemView.findViewById(R.id.track_bpm);
         }
 
         void bind(@NonNull MediaInfo track) {

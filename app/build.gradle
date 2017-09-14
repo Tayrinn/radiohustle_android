@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "ru.tayrinn.hustle.radiohustle"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -29,9 +29,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile "com.android.support:design:${project.property('supportlibrary')}"
     compile "com.android.support:appcompat-v7:${project.property('supportlibrary')}"
     compile "com.android.support:recyclerview-v7:${project.property('supportlibrary')}"
     compile "com.android.support:support-dynamic-animation:${project.property('supportlibrary')}"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
 
     //RxAndroid
     compile "io.reactivex.rxjava2:rxandroid:${project.property('rx')}"
